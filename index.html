@@ -1,35 +1,41 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <link rel="stylesheet" href="./css/style.css">
-   <link rel="manifest" href="./manifest.json">
-   <script src="https://kit.fontawesome.com/58df0b9ead.js" crossorigin="anonymous"></script>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./css/style.css" />
+    <link rel="manifest" href="./manifest.json" />
+    <script
+      src="https://kit.fontawesome.com/58df0b9ead.js"
+      crossorigin="anonymous"
+    ></script>
     <title>Bröllopsfotografen</title>
-</head>
-<body>
-    <div id="background-picture-taking">
-        <section id="profile-picture"> 
-          <button id="start-camera">Starta kameran</button>
-          <button id="take-picture">Ta kort</button>
-          <video src="" id="camera" autoplay></video>
-          <canvas id="picture"></canvas>
-      
-          <section>
-              <h3>Galleri</h3>
-          </section>
-        <section>
-          <h3>profile</h3>
-          <section id="taken-picture">
-  
-          </section>
-      </section>
-  
-  </section>
-  </div>
-    <a href="./gallery.html">    <i class="fa-solid fa-grip"></i></a>
+  </head>
+  <body>
+<button id="myBtn"><i class="fa-solid fa-grip"></i></button>
+    <div id="photo-app">
+    <section id="video-container">
+      <video src="" id="camera" autoplay></video> 
+           <button class="photo-btn" id="take-picture">föreviga ett ögonblick</button>
+    </section>
+    <section id="photo-container"> 
+      <canvas id="picture"></canvas>
+     <button class="photo-btn" id="new-picture"> Fånga ett nytt ögonblick</button>
+    </section>
+</div>
+
+<!-- The Modal -->
+<div id="myModal" class="modal">
+    <span class="close">&times;</span>
+ <div id="modal-content">
+    <h1>GALLERY</h1>
+    <section id="gallery">
+
+    </section>
+</div>
+
+</div>
     <script src="./js/index.js"></script>
-</body>
+  </body>
 </html>
