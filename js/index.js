@@ -1,23 +1,36 @@
 const videoContainer = document.querySelector(`#video-container`);
 const videoElem = document.querySelector("#camera");
 const takePictureButton = document.querySelector("#take-picture");
-
 const photoContainer = document.querySelector(`#photo-container`);
 const canvas = document.querySelector("#picture");
 const newPictureBtn = document.querySelector(`#new-picture`);
-
 const galleryElem = document.querySelector("#gallery");
 const ctx = canvas.getContext("2d");
-canvas.width = 500;
-    canvas.height = 375;
-    canvas.style.width = 500;
-    canvas.style.height = 375;
-
+var modal = document.getElementById("myModal");
+var btn = document.getElementById("myBtn");
+var span = document.getElementsByClassName("close")[0];
+canvas.width = 400;
+canvas.height = 300;
 let stream;
-
+const API_KEY = `$2b$10$UUd79Qokx0FtowYto6w1AesmhK5pfjAyIi7EOGLRV0rSkt/JTcWbC`
+let newarr = [];
 const images = [];
-
+let allbtns = [];
 // show video
+
+async function getImagesJson(){
+  const response = await fetch('https://api.jsonbin.io/b/628e1adb05f31f68b3a6a398/latest', { 
+  headers: {
+      'X-Master-Key': API_KEY
+  }
+  })
+  const data = await response.json()
+  console.log(data);
+
+}
+
+getImagesJson()
+
 async function showVideo() {
   if ("mediaDevices" in navigator) {
     stream = await navigator.mediaDevices.getUserMedia({
@@ -25,10 +38,11 @@ async function showVideo() {
       audio: false,
     });
     videoElem.srcObject = stream;
+    videoElem.width = 400;
+videoElem.height = 300;
   }
 }
 showVideo();
-
 //video or pic
 
 function showOrHide() {
@@ -43,6 +57,7 @@ newPictureBtn.addEventListener(`click`, () => {
 
 // get pic
 
+
 takePictureButton.addEventListener("click", () => {
   ctx.drawImage(videoElem, 0, 0, canvas.width, canvas.height);
   const imageData = canvas.toDataURL("image/png");
@@ -51,104 +66,100 @@ takePictureButton.addEventListener("click", () => {
     id: images.length,
     image: imageData,
   };
-
   images.push(newImage);
   showOrHide();
   saveToLocalStorage(images);
-createnewImage(newImage)
+  createnewImage(newImage);
 });
-
-
 function saveToLocalStorage(images) {
-  notis()
+  notis();
   localStorage.setItem("cameraToGallery", JSON.stringify(images));
 }
+
 function notis(params) {
   Notification.requestPermission().then((permisson) => {
-    //permission om användaren svara ja eller nej till notis
-    console.log(permisson)
-if (permisson === 'granted')
-{
-createNotification()
-}
-function createNotification() {
-  const text = 'du sparade en bild till galleriet'
-  const notification = new Notification('Notis', {body: text
-  })
-}
-});
+    console.log(permisson);
+    if (permisson === "granted") {
+      createNotification();
+    }
+
+    function createNotification() {
+      const text = "du sparade en bild till galleriet";
+      const notification = new Notification("Notis", { body: text });
+    }
+  });
 }
 
-let newarr = [];
+
 function createnewImage(image) {
   const divImg = document.createElement("div");
   const imageElem = document.createElement("img");
   imageElem.setAttribute("src", image.image);
   galleryElem.appendChild(divImg);
   divImg.appendChild(imageElem);
-  // imageElem.setAttribute("height", "58");
-  // imageElem.setAttribute("width", "14");
   newarr.push(imageElem);
-  console.log(newarr);
   createbtnpic(divImg);
 }
-function createImage(image) { 
+function createImage(image) {
   const divImg = document.createElement("div");
   const imageElem = document.createElement("img");
   imageElem.setAttribute("src", image.image);
   galleryElem.appendChild(divImg);
   divImg.appendChild(imageElem);
-  // imageElem.setAttribute("height", "58");
-  // imageElem.setAttribute("width", "14");
   newarr.push(imageElem);
-  console.log(newarr);
   createbtnpic(divImg);
 }
-let allbtns = [];
 function createbtnpic(divImg) {
   var btnn = document.createElement("button");
   divImg.appendChild(btnn);
   allbtns.push(btnn);
-  btnn.onclick = lool;
+  btnn.onclick = removeImg;
 }
 
-function lool(e) {
+function removeImg(e) {
   const n = Array.from(allbtns).indexOf(e.target);
   for (let i = 0; i < newarr.length; i++) {
     if (i === n) {
-      allbtns[n].remove();
-      newarr[i].remove();
+      allbtns[n].parentElement.remove();
       var images = JSON.parse(localStorage.getItem("cameraToGallery"));
       for (var d = 0; d < images.length; d++) {
-        if (images[d].id == n) {
+        if (images[d].id == n  || d == n ) {
           images.splice(d, 1);
-
           images = JSON.stringify(images);
           localStorage.setItem("cameraToGallery", images);
         }
       }
     }
   }
-}
-function getImages() {
+  // images.splice(n, 1); 
+  // images = JSON.stringify(images);
+  // localStorage.setItem("cameraToGallery", images);
 
+  } 
+//   let images = JSON.parse(localStorage.getItem("cameraToGallery"));
+//   const element = images[n];
+//     allbtns[n].remove();
+//       newarr[n].remove();
+//   console.log(element, n )
+// console.log([n])
+// images.splice(n, 1); 
+//  images = JSON.stringify(images);
+//     localStorage.setItem("cameraToGallery", images);
+  
+
+
+function getImages() {
   const images = JSON.parse(localStorage.getItem("cameraToGallery"));
   if (images == null) {
-   console.log("Gallery is empty");
-   
+    console.log("Gallery is empty");
   } else {
     for (const image of images) {
       createImage(image);
     }
   }
-}  
-
-var modal = document.getElementById("myModal");
-var btn = document.getElementById("myBtn");
-var span = document.getElementsByClassName("close")[0];
+}
 btn.onclick = function () {
   modal.style.display = "flex";
-
 };
 
 span.onclick = function () {
@@ -161,7 +172,8 @@ window.onclick = function (event) {
 };
 
 getImages();
-// service worker
+
+
 function registerServiceWorker() {
   if ("serviceWorker" in navigator) {
     navigator.serviceWorker
@@ -177,4 +189,3 @@ function registerServiceWorker() {
 
 registerServiceWorker();
 
-//localStorage.clear()
