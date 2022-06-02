@@ -1,7 +1,7 @@
 self.addEventListener('install', (event) => {
     event.waitUntil(
         caches.open('v1').then((cache) => {
-            return cache.addAll(['index.html', 'js/index.js', 'offline.html', 'favicon.ico', 'css/style-offline.css']);
+            return cache.addAll(['index.html', 'js/index.js', 'offline.html', 'css/style-offline.css']);
         })
     );
     self.skipWaiting();
@@ -14,7 +14,7 @@ self.addEventListener('activate', (event) => {
 });
 
 self.addEventListener('fetch', (event) => {
-    console.log(event.request.url); // Skriv ut url:en på varje nätverksförfrågan
+    console.log(event.request.url); 
     if (navigator.onLine) {
         console.log('Du är online!');
     } else {
